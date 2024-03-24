@@ -3,18 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from skimage.morphology import skeletonize
 
-
 class FingerPrint():
-    def __init__(self, fingerprint: np.array) -> None:
+    def __init__(self, fingerprint):
         self.fingerprint = fingerprint
         self.fingerprint_gr = cv2.cvtColor(self.fingerprint, cv2.COLOR_BGR2GRAY)
     
-    def __call__(self, thres=50, thres_maxval=255, type=cv2.THRESH_BINARY, skel_method='lee', block_width=20, block_height=20) -> None:
+    def __call__(self, thres=50, thres_maxval=255, type=cv2.THRESH_BINARY, skel_method='lee', block_width=20, block_height=20):
         self.__preprocessing(thres, thres_maxval, type, skel_method)
         self.nodes, self.tails = self.__get_nodes_and_tails()
         self.n_count, self.t_count = self.__count_nodes_and_tails(block_width, block_height)
 
-    def __preprocessing(self, thresh: int, maxval: int, type: int, method: str) -> None:
+    def __preprocessing(self, thresh, maxval, type, method):
         _, self.binary_fingerprint = cv2.threshold(self.fingerprint_gr, thresh=thresh, maxval=maxval, type=type)
         skelet_fingerprint = skeletonize(self.binary_fingerprint, method=method)
         self.skelet_fingerprint = np.array([
@@ -24,7 +23,7 @@ class FingerPrint():
                 for elem in row]) 
             for row in skelet_fingerprint])
     
-    def __get_nodes_and_tails(self) -> tuple:
+    def __get_nodes_and_tails(self):
         nodes = []
         tails = []
         for row_ind in range(1, len(self.skelet_fingerprint)-1):
@@ -47,7 +46,7 @@ class FingerPrint():
                     tails.append([col_ind, row_ind])
         return nodes, tails
     
-    def __count_nodes_and_tails(self, block_width: int, block_height: int) -> tuple:
+    def __count_nodes_and_tails(self, block_width, block_height):
         n_count = np.array([])
         t_count = np.array([])
         self.num_block_x = self.fingerprint_gr.shape[1] // block_width
@@ -74,7 +73,7 @@ class FingerPrint():
         t_count = t_count.reshape(self.num_block_y, self.num_block_x)
         return n_count, t_count
         
-    def draw_detection(self, nodes_color=(255, 0, 0), tails_color=(0, 0, 255)) -> None:
+    def draw_detection(self, nodes_color=(255, 0, 0), tails_color=(0, 0, 255)):
         nodes_and_tails = np.copy(self.skelet_fingerprint)
         for node in self.nodes:
             nodes_and_tails = cv2.circle(nodes_and_tails, node, 1, nodes_color, -1)
