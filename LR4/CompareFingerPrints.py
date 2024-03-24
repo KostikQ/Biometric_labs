@@ -6,15 +6,18 @@ from finger_print import FingerPrint
 def compareFingerPrints(example_path, fingerprint_path):
 
     e_image = cv2.imread(example_path)
+    c_image = cv2.imread(fingerprint_path)
+    cv2.imshow("example", e_image)
+    cv2.imshow("compared", c_image)
+
     example = FingerPrint(e_image)
     example()
     example.draw_detection()    
     
-    c_image = cv2.imread(fingerprint_path)
     compared = FingerPrint(c_image)
     compared()
     compared.draw_detection()
-
+    
     n_prob = 0
     t_prob = 0
     count = 0
@@ -34,4 +37,5 @@ def compareFingerPrints(example_path, fingerprint_path):
                 n_prob += min(compared.n_count[row_ind, col_ind], example.n_count[row_ind, col_ind]) / max(compared.n_count[row_ind, col_ind], example.n_count[row_ind, col_ind])
     n_prob /= count
     t_prob /= count
+    
     return t_sum_prob, n_sum_prob, t_prob, n_prob
