@@ -3,7 +3,7 @@ import cv2
 from finger_print import FingerPrint
 
 
-def compareFingerPrints(example_path, fingerprint_path):
+def compareFingerPrints(example_path: str, fingerprint_path: str) -> tuple:
 
     e_image = cv2.imread(example_path)
     c_image = cv2.imread(fingerprint_path)
