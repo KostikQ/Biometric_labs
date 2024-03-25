@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.morphology import skeletonize
-
+from tqdm import tqdm
 class FingerPrint():
     def __init__(self, fingerprint: np.array) -> None:
         self.fingerprint = fingerprint
@@ -26,7 +26,7 @@ class FingerPrint():
     def __get_nodes_and_tails(self) -> tuple:
         nodes = []
         tails = []
-        for row_ind in range(1, len(self.skelet_fingerprint)-1):
+        for row_ind in tqdm(range(1, len(self.skelet_fingerprint)-1)):
             for col_ind in range(1, len(self.skelet_fingerprint[row_ind])-1):
                 if (sum(self.skelet_fingerprint[row_ind][col_ind]) == 0 and 
                     [

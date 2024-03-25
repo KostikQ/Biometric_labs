@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 from finger_print import FingerPrint
-
+from tqdm import tqdm
 
 def compareFingerPrints(example_path: str, fingerprint_path: str) -> None:
 
@@ -24,7 +24,7 @@ def compareFingerPrints(example_path: str, fingerprint_path: str) -> None:
     t_sum_prob = min(np.sum(example.t_count), np.sum(compared.t_count))/max(np.sum(example.t_count), np.sum(compared.t_count))
     n_sum_prob = min(np.sum(example.n_count), np.sum(compared.n_count))/max(np.sum(example.n_count), np.sum(compared.n_count))
 
-    for row_ind in range(len(compared.n_count)):
+    for row_ind in tqdm(range(len(compared.n_count))):
         for col_ind in range(len(compared.n_count[row_ind])):
             count += 1
             if compared.t_count[row_ind, col_ind] == example.t_count[row_ind, col_ind]:
